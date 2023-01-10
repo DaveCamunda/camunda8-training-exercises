@@ -9,13 +9,13 @@ const ZB = require('zeebe-node');
 
 	zbc.createWorker({
 		taskType: 'credit-deduction',
-		taskHandler: job => { console.log(job.variables)
+		taskHandler: job => { console.log("Credit deducted")
 			                    job.complete() },
 	})
 
   zbc.createWorker({
     taskType: 'credit-card-charging',
-    taskHandler: job => { console.log(job.variables)
+    taskHandler: job => { console.log("Card charged")
                           job.complete() },
   })
 
