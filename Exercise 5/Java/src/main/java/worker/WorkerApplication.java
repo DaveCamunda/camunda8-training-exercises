@@ -4,7 +4,8 @@ import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.spring.client.EnableZeebeClient;
-import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
+import io.camunda.zeebe.spring.client.annotation.JobWorker;
+
 import java.time.Instant;
 
 import org.slf4j.Logger;
@@ -16,9 +17,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @EnableZeebeClient
 public class WorkerApplication {
-
-	@Autowired
-	private ZeebeClient client;
 	
 	private static Logger log = LoggerFactory.getLogger(WorkerApplication.class);
 
@@ -39,28 +37,16 @@ public class WorkerApplication {
 				job.getVariables());
 	}
 
-	@ZeebeWorker(type = "credit-deduction") 
+	@JobWorker(type = "credit-deduction") 
 	public void handleCreditDeduction(final JobClient jobClient, final ActivatedJob job) {
 		
 		logJob(job, null);
-    
-		/* For exercise 7
-		
-		client.newPublishMessageCommand().messageName("paymentRequestMessage")
-		      							 .correlationKey("")
-		      							 .variables("{\"orderId\": \"Generate something\"}")
-		      							 .send()
-		      							 .join();  */
-		
-		jobClient.newCompleteCommand(job.getKey()).send().join();
 	}
   
-	@ZeebeWorker(type = "credit-card-charging") 
+	@JobWorker(type = "credit-card-charging") 
 	public void handleChargeCreditCard(final JobClient jobClient, final ActivatedJob job) {
 		
 		logJob(job, null);
-    
-		jobClient.newCompleteCommand(job.getKey()).send().join();
 	}
   
 }

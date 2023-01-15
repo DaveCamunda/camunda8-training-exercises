@@ -3,7 +3,7 @@ package worker;
 import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.spring.client.EnableZeebeClient;
-import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
+import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import services.CreditCardService;
 import services.CustomerService;
 
@@ -48,8 +48,8 @@ public class WorkerApplication {
 				job.getVariables());
 	}
 
-	@ZeebeWorker(type = "credit-deduction") 
-	public void handleCreditDeduction(final JobClient client, final ActivatedJob job) {
+	@JobWorker(type = "credit-deduction") 
+	public Map<String, Object> handleCreditDeduction(final JobClient client, final ActivatedJob job) {
 		
 		logJob(job, null);
     
@@ -66,10 +66,10 @@ public class WorkerApplication {
 	    variables.put("openAmount", openAmount);
 	    variables.put("customerCredit", customerCredit);
 		
-		client.newCompleteCommand(job.getKey()).variables(variables).send().join();
+		return variables;
 	}
   
-	@ZeebeWorker(type = "credit-card-charging") 
+	@JobWorker(type = "credit-card-charging") 
 	public void handleChargeCreditCard(final JobClient client, final ActivatedJob job) {
 		
 		logJob(job, null);
@@ -81,8 +81,6 @@ public class WorkerApplication {
 	    Double openAmount = (Double) job.getVariablesAsMap().get("openAmount");
   
 	    creditCardService.chargeAmount(cardNumber, cvc, expiryDate, openAmount);
-    
-		client.newCompleteCommand(job.getKey()).send().join();
 	}
   
 }

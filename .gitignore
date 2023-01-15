@@ -14,6 +14,10 @@ local.properties
 .DS_Store
 target/
 application.properties
+CamundaCloudMgmtAPI-Client-Camunda-8-Training.txt
+node_modules/
+package-lock.json
+package.json
 
 # External tool builders
 .externalToolBuilders/

@@ -4,11 +4,10 @@ import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.spring.client.EnableZeebeClient;
-import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
+import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import services.CreditCardService;
 import services.CustomerService;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,8 +46,8 @@ public class WorkerApplication {
 				job.getVariables());
 	}
 
-	@ZeebeWorker(type = "credit-deduction") 
-	public void handleCreditDeduction(final JobClient client, final ActivatedJob job) {
+	@JobWorker(type = "credit-deduction") 
+	public Map<String, Object> handleCreditDeduction(final JobClient client, final ActivatedJob job) {
 		
 		logJob(job, null);
     
@@ -65,10 +64,10 @@ public class WorkerApplication {
 	    variables.put("openAmount", openAmount);
 	    variables.put("customerCredit", customerCredit);
 		
-		client.newCompleteCommand(job.getKey()).variables(variables).send().join();
+		return variables;
 	}
   
-	@ZeebeWorker(type = "credit-card-charging") 
+	@JobWorker(type = "credit-card-charging") 
 	public void handleChargeCreditCard(final JobClient client, final ActivatedJob job) {
 		
 		logJob(job, null);
@@ -84,17 +83,15 @@ public class WorkerApplication {
 		client.newCompleteCommand(job.getKey()).send().join();
 	}
 	
-	@ZeebeWorker(type = "payment-invocation") 
+	@JobWorker(type = "payment-invocation") 
 	public void handlePaymentInvocation(final JobClient client, final ActivatedJob job) {
 		
 		logJob(job, null);
 		
 		zeebeClient.newPublishMessageCommand().messageName("paymentRequestMessage").correlationKey("").variables(job.getVariablesAsMap()).send().join();
-    
-		client.newCompleteCommand(job.getKey()).send().join();
 	}
 	
-	@ZeebeWorker(type = "payment-completion") 
+	@JobWorker(type = "payment-completion") 
 	public void handlePaymentCompletion(final JobClient client, final ActivatedJob job) {
 		
 		logJob(job, null);
@@ -102,8 +99,6 @@ public class WorkerApplication {
 		String orderId = (String) job.getVariablesAsMap().get("orderId");
 		
 		zeebeClient.newPublishMessageCommand().messageName("paymentCompletedMessage").correlationKey(orderId).variables(job.getVariablesAsMap()).send().join();
-    
-		client.newCompleteCommand(job.getKey()).send().join();
 	}
   
 }
