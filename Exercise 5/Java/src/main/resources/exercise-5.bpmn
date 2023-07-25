@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.11.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.0.0" camunda:diagramRelationId="cfdd1366-cd51-4667-af3d-8fda5ff4d6d0">
-  <bpmn:process id="PaymentProcess" isExecutable="true">
+  <bpmn:process id="PaymentProcess" name="Payment Process" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1" name="Order Received">
       <bpmn:outgoing>Flow_1knvv16</bpmn:outgoing>
     </bpmn:startEvent>
@@ -29,14 +29,14 @@
     <bpmn:sequenceFlow id="Flow_1m0ynnv" sourceRef="Gateway_1dqxvwn" targetRef="Event_0u2kk5c" />
     <bpmn:serviceTask id="Activity_1sugj6e" name="Deduct Customer Credit">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="=credit-deduction" />
+        <zeebe:taskDefinition type="credit-deduction" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1knvv16</bpmn:incoming>
       <bpmn:outgoing>Flow_1nsj1jh</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="Activity_1iqp9tw" name="Charge Credit Card">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="=credit-card-charging" />
+        <zeebe:taskDefinition type="credit-card-charging" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_066v3ha</bpmn:incoming>
       <bpmn:outgoing>Flow_1e9vca1</bpmn:outgoing>
@@ -65,7 +65,7 @@
       <bpmndi:BPMNShape id="Event_0u2kk5c_di" bpmnElement="Event_0u2kk5c">
         <dc:Bounds x="892" y="100" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="867" y="143" width="85" height="14" />
+          <dc:Bounds x="868" y="143" width="85" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1ebbsrp_di" bpmnElement="Activity_1iqp9tw">
@@ -83,7 +83,7 @@
         <di:waypoint x="445" y="118" />
         <di:waypoint x="695" y="118" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="472" y="100" width="18" height="14" />
+          <dc:Bounds x="561" y="100" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_066v3ha_di" bpmnElement="Flow_066v3ha">
